@@ -16,8 +16,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(windowScene: windowScene)
-        let rootViewController = ExpensesViewController()
-        window?.rootViewController = rootViewController
+        let vc = ExpensesViewController()
+        
+        let navViewController = UINavigationController(rootViewController: vc)
+        window?.rootViewController = navViewController
         window?.makeKeyAndVisible()
         window?.backgroundColor = .white
         func sceneDidDisconnect(_ scene: UIScene) {

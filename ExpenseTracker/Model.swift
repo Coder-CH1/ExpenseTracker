@@ -38,6 +38,7 @@ class DatabaseModel {
             print("Unable to connect to database: \(error)")
         }
     }
+    
     func createTableForExpenses() {
         do {
             try db!.run(expenses.create(ifNotExists: true){ table in
@@ -51,8 +52,21 @@ class DatabaseModel {
             print("Unable to create table: \(error)")
         }
     }
+//MARK: - CRUD OPERATIONS -
     
-    func getAllExpenses() throws -> [Expense] {
+    ///CREATE
+    func addExpense(_ expense: Expense) throws {
+        let insert = expenses.insert(
+            description <- expense.description,
+            price <- expense.price,
+            splitOption <- expense.splitOption,
+            receiptImage <- (expense.receiptImage ?? Data())
+        )
+        try db!.run(insert)
+    }
+    
+    ///READ
+    func getAllExpense() throws -> [Expense] {
         var list = [Expense]()
         do {
             for expense in try db!.prepare(expenses) {
@@ -69,5 +83,23 @@ class DatabaseModel {
             throw error
         }
         return list
+    }
+    
+    ///UPDATE
+    func updateExpense(_ expense: Expense) throws {
+        guard let expenseId = expense.id else {return}
+        let update = expenses.filter(expenseId == id)
+        try db?.run(update.update(
+            description <- expense.description,
+            price <- expense.price,
+            splitOption <- expense.splitOption,
+            receiptImage <- (expense.receiptImage ?? Data())
+        ))
+    }
+    
+    ///DELETE
+    func deleteExpense(id: Int) throws {
+        let delete = expenses.filter(self.id == id)
+        try db?.run(delete.delete())
     }
 }
