@@ -7,13 +7,14 @@
 import UIKit
 
 //MARK: - UI
-class ExpensesViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
+class ExpensesViewController: UIViewController {
     
     // MARK: - Objects -
     let expensesTableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(ExpensesTableViewCell.self, forCellReuseIdentifier: "ExpensesTableViewCell")
+        tableView.showsVerticalScrollIndicator = false
         return tableView
     }()
     
@@ -168,5 +169,25 @@ extension ExpensesViewController: UITableViewDataSource, UITableViewDelegate {
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 150
+    }
 }
 
+extension ExpensesViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let image = info[.originalImage] as? UIImage {
+            if let imageData = image.pngData() {
+                let price = 0
+                var newExpense = Expense(id: 0,description: description, price: Double(price), splitOption: "", receiptImage: nil)
+                newExpense.receiptImage = imageData
+            }
+        }
+        picker.dismiss(animated: true)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
+    }
+}

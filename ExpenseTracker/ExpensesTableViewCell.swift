@@ -49,6 +49,8 @@ class ExpensesTableViewCell: UITableViewCell {
         addSubview(priceLablel)
         addSubview(receiptImgView)
         NSLayoutConstraint.activate([
+            receiptImgView.heightAnchor.constraint(equalToConstant: 100),
+            receiptImgView.widthAnchor.constraint(equalToConstant: 100),
             receiptImgView.topAnchor.constraint(equalTo: self.topAnchor),
             receiptImgView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
             
