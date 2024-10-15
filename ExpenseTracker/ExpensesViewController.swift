@@ -20,7 +20,7 @@ class ExpensesViewController: UIViewController {
     
     var expenses: [Expense] = []
     let imagePicker = UIImagePickerController()
-    let customView = UIView(frame: CGRect(x: 0, y: 0, width: 270, height: 200))
+    var selectedImageData: Data?
     
     // MARK: - Life cycle -
     override func viewDidLoad() {
@@ -178,11 +178,7 @@ extension ExpensesViewController: UITableViewDataSource, UITableViewDelegate {
 extension ExpensesViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let image = info[.originalImage] as? UIImage {
-            if let imageData = image.pngData() {
-                let price = 0
-                var newExpense = Expense(id: 0,description: description, price: Double(price), splitOption: "", receiptImage: nil)
-                newExpense.receiptImage = imageData
-            }
+            selectedImageData = image.pngData()
         }
         picker.dismiss(animated: true)
     }
