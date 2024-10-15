@@ -91,7 +91,7 @@ class ExpensesViewController: UIViewController {
                   let price = Double(priceText) else { return }
             let newExpense = Expense(id: expense?.id,description: description, price: price, splitOption: "", receiptImage: nil)
             
-            if let expense = expense {
+            if expense != nil {
                 self.updateExpense(expense: newExpense)
             } else {
                 self.saveExpense(expense: newExpense)
@@ -177,7 +177,7 @@ extension ExpensesViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension ExpensesViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let image = info[.originalImage] as? UIImage {
+        if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             selectedImageData = image.pngData()
         }
         picker.dismiss(animated: true)
