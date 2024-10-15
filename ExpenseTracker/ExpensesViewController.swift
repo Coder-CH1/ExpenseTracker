@@ -18,6 +18,8 @@ class ExpensesViewController: UIViewController {
         tableView.register(ExpensesTableViewCell.self, forCellReuseIdentifier: "ExpensesTableViewCell")
         return tableView
     }()
+    
+    var expenses: [Expense] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,11 +37,20 @@ class ExpensesViewController: UIViewController {
         ])
     }
     
+    func loadExpenses() {
+        do {
+            expenses = try DatabaseModel.shared.getAllExpenses()
+            expensesTableView.reloadData()
+        } catch {
+           print("failed to load expenses: \(error)")
+        }
+    }
+    
 }
 
 extension ExpensesViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 9
+        return expenses.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

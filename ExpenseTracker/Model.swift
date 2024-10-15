@@ -20,13 +20,18 @@ struct Expense {
 class DatabaseModel {
     static let shared = DatabaseModel()
     let db: Connection?
-    //    let images = Table("images")
-    //    let id = Expression<Int64>("id")
-    //    let imageData = Expression<Data>("imageData")
+    let expenses = Table("expenses")
+    let id = Expression<Int>("id")
+    let description = Expression<String>("description")
+    let price = Expression<Double>("price")
+    let splitOption = Expression<String>("split_option")
+    let receiptImage = Expression<Data>("receipt_image")
     private init() {
         do {
+            let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+            let dbPath = documentDirectory.appendingPathComponent("expenses.sqlite3").path
             db = try
-            Connection(.inMemory)
+            Connection(dbPath)
             createTableForExpenses()
         } catch {
             db = nil
@@ -34,12 +39,35 @@ class DatabaseModel {
         }
     }
     func createTableForExpenses() {
-        let expenses = Table("expensess")
         do {
-            try db!.run(expenses.create{ t in
+            try db!.run(expenses.create(ifNotExists: true){ table in
+                table.column(id, primaryKey: .autoincrement)
+                table.column(description)
+                table.column(price)
+                table.column(splitOption)
+                table.column(receiptImage)
             })
         } catch {
             print("Unable to create table: \(error)")
         }
+    }
+    
+    func getAllExpenses() throws -> [Expense] {
+        var list = [Expense]()
+        do {
+            for expense in try db!.prepare(expenses) {
+                list.append(Expense(
+                    id: expense[id],
+                    description: expense[description],
+                    price: expense[price],
+                    splitOption: expense[splitOption],
+                receiptImage: expense[receiptImage]
+                ))
+            }
+        } catch {
+            print("error fetching expenses: \(error)")
+            throw error
+        }
+        return list
     }
 }
