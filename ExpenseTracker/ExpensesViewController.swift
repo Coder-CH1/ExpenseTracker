@@ -14,7 +14,7 @@ class ExpensesViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.dataSource = self
         tableView.delegate = self
-        //tableView.backgroundColor = .lightGray
+        tableView.backgroundColor = .lightGray
         tableView.register(ExpensesTableViewCell.self, forCellReuseIdentifier: "ExpensesTableViewCell")
         return tableView
     }()
@@ -23,7 +23,7 @@ class ExpensesViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        setSubviewsAndLayout()
     }
     
     // MARK: - Subviews and Layout -
@@ -55,6 +55,16 @@ extension ExpensesViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ExpensesTableViewCell", for: indexPath) as! ExpensesTableViewCell
+        let expense = expenses[indexPath.row]
+        
+        cell.textLablel.text = expense.description
+        cell.descriptionLablel.text = String(format: "$%.2f", expense.price)
+        
+        if let imageData = expense.receiptImage {
+            cell.receiptImgView.image = UIImage(data: imageData)
+        } else {
+            cell.receiptImgView.image = nil
+        }
         return cell
     }
     
