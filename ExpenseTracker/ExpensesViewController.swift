@@ -21,6 +21,7 @@ class ExpensesViewController: UIViewController {
     var expenses: [Expense] = []
     let imagePicker = UIImagePickerController()
     var selectedImageData: Data?
+    var currentAlert: UIAlertController?
     
     // MARK: - Life cycle -
     override func viewDidLoad() {
@@ -64,14 +65,14 @@ class ExpensesViewController: UIViewController {
     
     // MARK: - Method to present alert form expenses -
     func presentExpenseForm(expense: Expense? = nil) {
-        let alert = UIAlertController(title: expense == nil ? "Add expense" :  "Update expense", message: "Enter details", preferredStyle: .alert)
+        currentAlert = UIAlertController(title: expense == nil ? "Add expense" :  "Update expense", message: "Enter details", preferredStyle: .alert)
         
-        alert.addTextField { textField in
+        currentAlert?.addTextField { textField in
             textField.placeholder = "Description"
             textField.text = expense?.description
         }
         
-        alert.addTextField { textField in
+        currentAlert?.addTextField { textField in
             textField.placeholder = "Price"
             textField.keyboardType = .decimalPad
             textField.text = expense != nil ? String(expense!.price) : nil
@@ -83,13 +84,13 @@ class ExpensesViewController: UIViewController {
             self.present(self.imagePicker, animated: true)
         }
         
-        alert.addAction(uploadImage)
+        currentAlert?.addAction(uploadImage)
         
         let saveAction = UIAlertAction(title: "Save", style: .default) {_ in
-            guard let description = alert .textFields?[0].text, !description.isEmpty,
-                  let priceText = alert.textFields?[1].text,
+            guard let description = self.currentAlert?.textFields?[0].text, !description.isEmpty,
+                  let priceText = self.currentAlert?.textFields?[1].text,
                   let price = Double(priceText) else { return }
-            let newExpense = Expense(id: expense?.id,description: description, price: price, splitOption: "", receiptImage: nil)
+            let newExpense = Expense(id: expense?.id,description: description, price: price, splitOption: "", receiptImage: self.selectedImageData)
             
             if expense != nil {
                 self.updateExpense(expense: newExpense)
@@ -98,9 +99,9 @@ class ExpensesViewController: UIViewController {
             }
         }
         
-        alert.addAction(saveAction)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        present(alert, animated: true)
+        currentAlert?.addAction(saveAction)
+        currentAlert?.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(currentAlert!, animated: true)
     }
     
     // MARK: - Method to save expenses -
@@ -175,12 +176,18 @@ extension ExpensesViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
+// MARK: - Protocol delegate for Image picker
 extension ExpensesViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             selectedImageData = image.pngData()
+            currentAlert?.message = "image selected"
         }
-        picker.dismiss(animated: true)
+        picker.dismiss(animated: true) {
+            if let currentAlert = self.currentAlert {
+                self.present(currentAlert, animated: true)
+            }
+        }
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

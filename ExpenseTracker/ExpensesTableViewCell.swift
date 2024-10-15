@@ -57,7 +57,7 @@ class ExpensesTableViewCell: UITableViewCell {
             descriptionLablel.topAnchor.constraint(equalTo: self.topAnchor),
             descriptionLablel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
             
-            priceLablel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10)
+            priceLablel.topAnchor.constraint(equalTo: descriptionLablel.bottomAnchor, constant: 5)
         ])
     }
 
