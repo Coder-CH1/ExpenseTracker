@@ -22,18 +22,28 @@ class ExpensesViewController: UIViewController {
     let imagePicker = UIImagePickerController()
     var selectedImageData: Data?
     var currentAlert: UIAlertController?
+    let segmentedControl = UISegmentedControl(items: ["Current", "Saved"])
     
     // MARK: - Life cycle -
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Expenses"
-        expensesTableView.dataSource = self
-        expensesTableView.delegate = self
+        segmentedControl.addTarget(self, action: #selector(segmentedChanged), for: .valueChanged)
+        navigationItem.titleView = segmentedControl
         setSubviewsAndLayout()
+    }
+    
+    @objc func segmentedChanged() {
+        if segmentedControl.selectedSegmentIndex == 0 {
+            loadCurrentExpense()
+        } else {
+            savedExpenses()
+        }
     }
     
     // MARK: - Subviews and Layout -
     func setSubviewsAndLayout() {
+        expensesTableView.delegate = self
+        expensesTableView.dataSource = self
         view.addSubview(expensesTableView)
         NSLayoutConstraint.activate([
             expensesTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
@@ -54,12 +64,25 @@ class ExpensesViewController: UIViewController {
     }
     
     // MARK: - Method to load expenses -
-    func loadExpense() {
+    func loadCurrentExpense() {
         do {
             expenses = try DatabaseModel.shared.getAllExpense()
-            expensesTableView.reloadData()
+            DispatchQueue.main.async {
+                self.expensesTableView.reloadData()
+            }
         } catch {
             print("Failed to load expenses: \(error)")
+        }
+    }
+    
+    func savedExpenses() {
+        do {
+            expenses = try DatabaseModel.shared.getSavedExpenses()
+            DispatchQueue.main.async {
+                self.expensesTableView.reloadData()
+            }
+        } catch {
+            print("Failed to load saved expenses: \(error)")
         }
     }
     
@@ -106,9 +129,11 @@ class ExpensesViewController: UIViewController {
     
     // MARK: - Method to save expenses -
     func saveExpense(expense: Expense) {
+        var savedExpense = expense
+        savedExpense.isSaved = true
         do {
             try DatabaseModel.shared.addExpense(expense)
-            loadExpense()
+            loadCurrentExpense()
         } catch {
             print("Failed to save expense: \(error)")
         }
@@ -118,7 +143,7 @@ class ExpensesViewController: UIViewController {
     func updateExpense(expense: Expense) {
         do {
             try DatabaseModel.shared.updateExpense(expense)
-            loadExpense()
+            loadCurrentExpense()
         } catch {
             print("Failed to update expense: \(error)")
         }
@@ -129,7 +154,7 @@ class ExpensesViewController: UIViewController {
         guard let expenseId = expense.id else { return }
         do {
             try DatabaseModel.shared.deleteExpense(id: expenseId)
-            loadExpense()
+            loadCurrentExpense()
         } catch {
             print("Failed to delete expense: \(error)")
         }

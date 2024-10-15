@@ -16,6 +16,7 @@ struct Expense {
     var price: Double
     var splitOption: String
     var receiptImage: Data?
+    var isSaved: Bool = false
 }
 
 // MARK: - Singleton Pattern Initialization and  Sqlite Table Creation -
@@ -28,11 +29,16 @@ class DatabaseModel {
     let price = Expression<Double>("price")
     let splitOption = Expression<String>("split_option")
     let receiptImage = Expression<Data>("receipt_image")
+    let isSaved = Expression<Bool>("is_saved")
     
     private init() {
         do {
+            let fileManager = FileManager.default
             let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
             let dbPath = documentDirectory.appendingPathComponent("expenses.sqlite3").path
+            if fileManager.fileExists(atPath: dbPath) {
+                try fileManager.removeItem(atPath: dbPath)
+            }
             db = try
             Connection(dbPath)
             createTableForExpenses()
@@ -50,10 +56,32 @@ class DatabaseModel {
                 table.column(price)
                 table.column(splitOption)
                 table.column(receiptImage)
+                table.column(isSaved)
             })
+            print("Table created successfully")
         } catch {
             print("Unable to create table: \(error)")
         }
+    }
+    
+    func getSavedExpenses() throws -> [Expense] {
+        var savedExpenses = [Expense]()
+        do {
+            let query = expenses.filter(isSaved == true)
+            for expense in try db!.prepare(query) {
+                savedExpenses.append(Expense(
+                    id: expense[id],
+                    description: expense[description],
+                    price: expense[price],
+                    splitOption: expense[splitOption],
+                    receiptImage: expense[receiptImage],
+                    isSaved: expense[isSaved]
+                ))
+            }
+        } catch {
+            print("Error fetching saved expenses: \(error)")
+        }
+        return savedExpenses
     }
     
 //MARK: - CRUD OPERATIONS -
@@ -64,7 +92,8 @@ class DatabaseModel {
             description <- expense.description,
             price <- expense.price,
             splitOption <- expense.splitOption,
-            receiptImage <- (expense.receiptImage ?? Data())
+            receiptImage <- (expense.receiptImage ?? Data()),
+            isSaved <- (expense.isSaved)
         )
         try db!.run(insert)
     }
@@ -79,7 +108,8 @@ class DatabaseModel {
                     description: expense[description],
                     price: expense[price],
                     splitOption: expense[splitOption],
-                receiptImage: expense[receiptImage]
+                receiptImage: expense[receiptImage],
+                    isSaved: expense[isSaved]
                 ))
             }
         } catch {
