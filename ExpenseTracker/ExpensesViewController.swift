@@ -7,7 +7,7 @@
 import UIKit
 
 //MARK: - UI
-class ExpensesViewController: UIViewController {
+class ExpensesViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     
     // MARK: - Objects -
     let expensesTableView: UITableView = {
@@ -18,6 +18,8 @@ class ExpensesViewController: UIViewController {
     }()
     
     var expenses: [Expense] = []
+    let imagePicker = UIImagePickerController()
+    let customView = UIView(frame: CGRect(x: 0, y: 0, width: 270, height: 200))
     
     // MARK: - Life cycle -
     override func viewDidLoad() {
@@ -73,6 +75,14 @@ class ExpensesViewController: UIViewController {
             textField.keyboardType = .decimalPad
             textField.text = expense != nil ? String(expense!.price) : nil
         }
+        
+        let uploadImage = UIAlertAction(title: "Upload receipt", style: .default) {_ in
+            self.imagePicker.delegate = self
+            self.imagePicker.sourceType = .photoLibrary
+            self.present(self.imagePicker, animated: true)
+        }
+        
+        alert.addAction(uploadImage)
         
         let saveAction = UIAlertAction(title: "Save", style: .default) {_ in
             guard let description = alert .textFields?[0].text, !description.isEmpty,
