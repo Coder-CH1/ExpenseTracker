@@ -13,7 +13,6 @@ class ExpensesViewController: UIViewController {
     let expensesTableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = .lightGray
         tableView.register(ExpensesTableViewCell.self, forCellReuseIdentifier: "ExpensesTableViewCell")
         return tableView
     }()
@@ -23,6 +22,7 @@ class ExpensesViewController: UIViewController {
     // MARK: - Life cycle -
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Expenses"
         expensesTableView.dataSource = self
         expensesTableView.delegate = self
         setSubviewsAndLayout()
