@@ -33,12 +33,9 @@ class DatabaseModel {
     
     private init() {
         do {
-            let fileManager = FileManager.default
             let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
             let dbPath = documentDirectory.appendingPathComponent("expenses.sqlite3").path
-            if fileManager.fileExists(atPath: dbPath) {
-                try fileManager.removeItem(atPath: dbPath)
-            }
+            
             db = try
             Connection(dbPath)
             createTableForExpenses()

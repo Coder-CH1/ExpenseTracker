@@ -27,6 +27,7 @@ class ExpensesViewController: UIViewController {
     // MARK: - Life cycle -
     override func viewDidLoad() {
         super.viewDidLoad()
+        segmentedControl.selectedSegmentIndex = 0
         segmentedControl.addTarget(self, action: #selector(segmentedChanged), for: .valueChanged)
         navigationItem.titleView = segmentedControl
         setSubviewsAndLayout()
@@ -134,6 +135,7 @@ class ExpensesViewController: UIViewController {
         do {
             try DatabaseModel.shared.addExpense(expense)
             loadCurrentExpense()
+            savedExpenses()
         } catch {
             print("Failed to save expense: \(error)")
         }
