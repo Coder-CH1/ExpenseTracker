@@ -7,8 +7,10 @@
 
 import UIKit
 
+// MARK: - UI -
 class ExpensesTableViewCell: UITableViewCell {
     
+    // MARK: - Objects -
     let descriptionLablel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -29,11 +31,13 @@ class ExpensesTableViewCell: UITableViewCell {
     
     let identifier = "ExpensesTableViewCell"
 
+    // MARK: - Life cycle -
     override func awakeFromNib() {
         super.awakeFromNib()
         setSubviewsAndLayout()
     }
 
+    // MARK: - Life cycle -
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         setSubviewsAndLayout()

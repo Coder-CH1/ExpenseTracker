@@ -6,8 +6,10 @@
 //
 import UIKit
 
+//MARK: - UI
 class ExpensesViewController: UIViewController {
     
+    // MARK: - Objects -
     let expensesTableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -18,6 +20,7 @@ class ExpensesViewController: UIViewController {
     
     var expenses: [Expense] = []
     
+    // MARK: - Life cycle -
     override func viewDidLoad() {
         super.viewDidLoad()
         expensesTableView.dataSource = self
@@ -41,10 +44,12 @@ class ExpensesViewController: UIViewController {
         
     }
     
+    // MARK: - Method to add expenses -
     @objc func addExpense() {
         presentExpenseForm()
     }
     
+    // MARK: - Method to load expenses -
     func loadExpense() {
         do {
             expenses = try DatabaseModel.shared.getAllExpense()
@@ -54,6 +59,7 @@ class ExpensesViewController: UIViewController {
         }
     }
     
+    // MARK: - Method to present alert form expenses -
     func presentExpenseForm(expense: Expense? = nil) {
         let alert = UIAlertController(title: expense == nil ? "Add expense" :  "Update expense", message: "Enter details", preferredStyle: .alert)
         
@@ -85,6 +91,8 @@ class ExpensesViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         present(alert, animated: true)
     }
+    
+    // MARK: - Method to save expenses -
     func saveExpense(expense: Expense) {
         do {
             try DatabaseModel.shared.addExpense(expense)
@@ -94,6 +102,7 @@ class ExpensesViewController: UIViewController {
         }
     }
     
+    // MARK: - Method to update expenses -
     func updateExpense(expense: Expense) {
         do {
             try DatabaseModel.shared.updateExpense(expense)
@@ -103,6 +112,7 @@ class ExpensesViewController: UIViewController {
         }
     }
     
+    // MARK: - Method to delete expenses -
     func deleteExpense(expense: Expense) {
         guard let expenseId = expense.id else { return }
         do {
@@ -114,6 +124,7 @@ class ExpensesViewController: UIViewController {
     }
 }
 
+// MARK: - Extensions for protocol datasource and delegate -
 extension ExpensesViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return expenses.count
@@ -140,7 +151,6 @@ extension ExpensesViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        //let expenseDeleteData = expenses[indexPath.row]
         let expense = expenses[indexPath.row]
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { action, view, completion in
             self.deleteExpense(expense: expense)

@@ -9,6 +9,7 @@ import Foundation
 import sqlite3
 import SQLite
 
+// MARK: - Data Model -
 struct Expense {
     var id: Int?
     var description: String
@@ -17,6 +18,7 @@ struct Expense {
     var receiptImage: Data?
 }
 
+// MARK: - Singleton Pattern Initialization and  Sqlite Table Creation -
 class DatabaseModel {
     static let shared = DatabaseModel()
     let db: Connection?
@@ -26,6 +28,7 @@ class DatabaseModel {
     let price = Expression<Double>("price")
     let splitOption = Expression<String>("split_option")
     let receiptImage = Expression<Data>("receipt_image")
+    
     private init() {
         do {
             let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
@@ -52,9 +55,10 @@ class DatabaseModel {
             print("Unable to create table: \(error)")
         }
     }
+    
 //MARK: - CRUD OPERATIONS -
     
-    ///CREATE
+    ///CREATE -
     func addExpense(_ expense: Expense) throws {
         let insert = expenses.insert(
             description <- expense.description,
@@ -65,7 +69,7 @@ class DatabaseModel {
         try db!.run(insert)
     }
     
-    ///READ
+    ///READ -
     func getAllExpense() throws -> [Expense] {
         var list = [Expense]()
         do {
@@ -85,7 +89,7 @@ class DatabaseModel {
         return list
     }
     
-    ///UPDATE
+    ///UPDATE  -
     func updateExpense(_ expense: Expense) throws {
         guard let expenseId = expense.id else {return}
         let update = expenses.filter(expenseId == id)
@@ -97,7 +101,7 @@ class DatabaseModel {
         ))
     }
     
-    ///DELETE
+    ///DELETE  -
     func deleteExpense(id: Int) throws {
         let delete = expenses.filter(self.id == id)
         try db?.run(delete.delete())
