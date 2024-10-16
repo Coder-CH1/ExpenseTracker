@@ -30,13 +30,13 @@ class ExpensesTableViewCell: UITableViewCell {
     }()
     
     let identifier = "ExpensesTableViewCell"
-
+    
     // MARK: - Life cycle -
     override func awakeFromNib() {
         super.awakeFromNib()
         setSubviewsAndLayout()
     }
-
+    
     // MARK: - Life cycle -
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -60,5 +60,4 @@ class ExpensesTableViewCell: UITableViewCell {
             priceLablel.topAnchor.constraint(equalTo: descriptionLablel.bottomAnchor, constant: 5)
         ])
     }
-
 }
