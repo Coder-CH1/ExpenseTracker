@@ -103,6 +103,10 @@ class ExpensesViewController: UIViewController {
             textField.text = expense != nil ? String(expense!.price) : nil
         }
         
+        if let existingImageData = expense?.receiptImage {
+            selectedImageData = existingImageData
+        }
+        
         let uploadImage = UIAlertAction(title: "Upload receipt", style: .default) {_ in
             self.imagePicker.delegate = self
             self.imagePicker.sourceType = .photoLibrary
@@ -187,7 +191,9 @@ extension ExpensesViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)  {
         expensesTableView.deselectRow(at: indexPath, animated: true)
+        let selectedExpense = expenses[indexPath.row]
         
+        presentExpenseForm(expense: selectedExpense)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
