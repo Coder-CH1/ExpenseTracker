@@ -31,6 +31,7 @@ class ExpensesViewController: UIViewController {
         segmentedControl.addTarget(self, action: #selector(segmentedChanged), for: .valueChanged)
         navigationItem.titleView = segmentedControl
         setSubviewsAndLayout()
+        loadCurrentExpense()
     }
     
     @objc func segmentedChanged() {
