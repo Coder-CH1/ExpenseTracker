@@ -1,1 +1,4 @@
- - Sqlite crud(create, read, update and delete)operations in UIkit.
+ # Features:
+ - UIkit(Programmatic UI)
+ - Sqlite (Crud Operations)
+ - Cocoapod (Dependency Manager)
