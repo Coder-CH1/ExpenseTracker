@@ -54,10 +54,10 @@ class ExpensesTableViewCell: UITableViewCell {
             receiptImgView.topAnchor.constraint(equalTo: self.topAnchor),
             receiptImgView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
             
-            descriptionLablel.topAnchor.constraint(equalTo: self.topAnchor),
+            descriptionLablel.topAnchor.constraint(equalTo: self.topAnchor, constant: 30),
             descriptionLablel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
             
-            priceLablel.topAnchor.constraint(equalTo: descriptionLablel.bottomAnchor, constant: 5),
+            priceLablel.topAnchor.constraint(equalTo: descriptionLablel.bottomAnchor, constant: 10),
             priceLablel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
         ])
     }
