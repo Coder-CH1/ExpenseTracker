@@ -90,15 +90,17 @@ class DatabaseModel {
         var list = [Expense]()
         do {
             for expense in try db!.prepare(expenses) {
-                list.append(Expense(
+                let fetchedExpenses = Expense(
                     id: expense[id],
                     description: expense[description],
                     price: expense[price],
                     splitOption: expense[splitOption],
                     receiptImage: expense[receiptImage],
                     isSaved: expense[isSaved]
-                ))
+                )
+                list.append(fetchedExpenses)
             }
+            print("Fetched expenses: \(list)")
         } catch {
             print("error fetching expenses: \(error)")
             throw error

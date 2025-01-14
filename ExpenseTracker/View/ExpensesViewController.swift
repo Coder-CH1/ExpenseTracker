@@ -58,6 +58,7 @@ class ExpensesViewController: UIViewController {
     func loadCurrentExpense() {
         do {
             expenses = try DatabaseModel.shared.getAllExpense()
+            print("Expenses loaded: \(expenses)")
             DispatchQueue.main.async {
                 self.expensesTableView.reloadData()
             }
@@ -128,6 +129,7 @@ class ExpensesViewController: UIViewController {
         savedExpense.isSaved = true
         do {
             try DatabaseModel.shared.addExpense(expense)
+            print("Expense saved successfully")
             loadCurrentExpense()
             self.currentAlert?.dismiss(animated: true)
         } catch {
@@ -139,6 +141,7 @@ class ExpensesViewController: UIViewController {
     func updateExpense(expense: Expense) {
         do {
             try DatabaseModel.shared.updateExpense(expense)
+            print("Expense updated successfully")
             loadCurrentExpense()
             self.currentAlert?.dismiss(animated: true)
         } catch {
