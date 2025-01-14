@@ -2,23 +2,17 @@ PODS:
   - SQLite.swift (0.14.1):
     - SQLite.swift/standard (= 0.14.1)
   - SQLite.swift/standard (0.14.1)
-  - "sqlite3 (3.46.1+1)":
-    - "sqlite3/common (= 3.46.1+1)"
-  - "sqlite3/common (3.46.1+1)"
 
 DEPENDENCIES:
   - SQLite.swift (~> 0.14.0)
-  - sqlite3
 
 SPEC REPOS:
   trunk:
     - SQLite.swift
-    - sqlite3
 
 SPEC CHECKSUMS:
   SQLite.swift: 2992550ebf3c5b268bf4352603e3df87d2a4ed72
-  sqlite3: 0bb0e6389d824e40296f531b858a2a0b71c0d2fb
 
-PODFILE CHECKSUM: 31289b2ef2555240f5299083ae02068b0c88a6c2
+PODFILE CHECKSUM: a72d17f5ac78fe821dfb3690b8dd7e085a1dd70d
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

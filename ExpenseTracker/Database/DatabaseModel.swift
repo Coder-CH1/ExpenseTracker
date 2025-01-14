@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import sqlite3
 import SQLite
 
 // MARK: - Singleton Pattern Initialization and  Sqlite Table Creation -

@@ -19,27 +19,16 @@ class ExpensesViewController: UIViewController {
     }()
     
     var expenses: [Expense] = []
-    let imagePicker = UIImagePickerController()
     var selectedImageData: Data?
     var currentAlert: UIAlertController?
-    let segmentedControl = UISegmentedControl(items: ["Current", "Saved"])
+    let imagePicker = UIImagePickerController()
     
     // MARK: - Life cycle -
     override func viewDidLoad() {
         super.viewDidLoad()
-        segmentedControl.selectedSegmentIndex = 0
-        segmentedControl.addTarget(self, action: #selector(segmentedChanged), for: .valueChanged)
-        navigationItem.titleView = segmentedControl
+        title = "Expenses"
         setSubviewsAndLayout()
         loadCurrentExpense()
-    }
-    
-    @objc func segmentedChanged() {
-        if segmentedControl.selectedSegmentIndex == 0 {
-            loadCurrentExpense()
-        } else {
-            savedExpenses()
-        }
     }
     
     // MARK: - Subviews and Layout -
@@ -140,7 +129,7 @@ class ExpensesViewController: UIViewController {
         do {
             try DatabaseModel.shared.addExpense(expense)
             loadCurrentExpense()
-            savedExpenses()
+            self.currentAlert?.dismiss(animated: true)
         } catch {
             print("Failed to save expense: \(error)")
         }
@@ -151,8 +140,10 @@ class ExpensesViewController: UIViewController {
         do {
             try DatabaseModel.shared.updateExpense(expense)
             loadCurrentExpense()
+            self.currentAlert?.dismiss(animated: true)
         } catch {
             print("Failed to update expense: \(error)")
+            
         }
     }
     
