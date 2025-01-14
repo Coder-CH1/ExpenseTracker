@@ -79,7 +79,7 @@ class ExpensesViewController: UIViewController {
     
     // MARK: - Method to present alert form expenses -
     func presentExpenseForm(expense: Expense? = nil) {
-        currentAlert = UIAlertController(title: expense == nil ? "Add expense" :  "Update expense", message: "Enter details", preferredStyle: .alert)
+        currentAlert = UIAlertController(title: "Add expense", message: "Enter details", preferredStyle: .alert)
         
         currentAlert?.addTextField { textField in
             textField.placeholder = "Description"
